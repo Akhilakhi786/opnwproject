@@ -6,30 +6,22 @@
 
 <div class="card p-4 shadow-sm">
 
-    <form>
+    <form action="/admin/add-holiday" method="POST">
+        @csrf
 
-        <div class="row g-3">
-
-            <div class="col-md-6">
-                <label class="form-label">Holiday Name</label>
-                <input type="text" class="form-control" placeholder="Enter holiday name">
-            </div>
-
-            <div class="col-md-6">
-                <label class="form-label">Date</label>
-                <input type="date" class="form-control">
-            </div>
-
-            <div class="col-md-6">
-                <label class="form-label">Day</label>
-                <input type="text" class="form-control" placeholder="e.g. Monday">
-            </div>
-
+        <div class="mb-3">
+            <label>Holiday Name</label>
+            <input type="text" name="title" class="form-control" required>
         </div>
 
-        <div class="mt-4">
-            <button class="btn btn-primary px-4">Save Holiday</button>
+        <div class="mb-3">
+            <label>Date</label>
+            <input type="date" name="date" class="form-control" required>
         </div>
+
+        <button type="submit" class="btn btn-primary">
+            Save Holiday
+        </button>
 
     </form>
 

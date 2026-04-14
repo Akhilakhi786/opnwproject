@@ -2,97 +2,104 @@
 
 @section('content')
 
-<h3 class="mb-4 fw-bold">Dashboard Overview</h3>
+<h3 class="mb-4 fw-bold">Admin Dashboard</h3>
 
-<!-- STATS CARDS -->
-<div class="row g-4 mb-4">
-
-    <div class="col-md-3">
-        <div class="card p-3 text-center">
-            <i class="fa fa-users fa-2x text-primary mb-2"></i>
-            <h6>Total Employees</h6>
-            <h3 class="fw-bold">120</h3>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card p-3 text-center">
-            <i class="fa fa-check-circle fa-2x text-success mb-2"></i>
-            <h6>Present Today</h6>
-            <h3 class="fw-bold">95</h3>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card p-3 text-center">
-            <i class="fa fa-bed fa-2x text-warning mb-2"></i>
-            <h6>On Leave</h6>
-            <h3 class="fw-bold">10</h3>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card p-3 text-center">
-            <i class="fa fa-times-circle fa-2x text-danger mb-2"></i>
-            <h6>Absent</h6>
-            <h3 class="fw-bold">15</h3>
-        </div>
-    </div>
-
-</div>
-
-
-<!-- CHARTS -->
+<!-- 🔥 MODERN CARDS -->
 <div class="row g-4">
 
-    <!-- Attendance Chart -->
-    <div class="col-md-6">
-        <div class="card p-4">
-            <h5 class="mb-3">Attendance Overview</h5>
-            <canvas id="attendanceChart"></canvas>
+    <div class="col-md-3">
+        <div class="card shadow border-0 rounded-4 p-3 text-center">
+            <h6 class="text-muted">Employees</h6>
+            <h2 class="fw-bold text-primary">
+                {{ \App\Models\Employee::count() }}
+            </h2>
         </div>
     </div>
 
-    <!-- Leave Chart -->
-    <div class="col-md-6">
-        <div class="card p-4">
-            <h5 class="mb-3">Leave Distribution</h5>
-            <canvas id="leaveChart"></canvas>
+    <div class="col-md-3">
+        <div class="card shadow border-0 rounded-4 p-3 text-center">
+            <h6 class="text-muted">Pending Leaves</h6>
+            <h2 class="fw-bold text-warning">
+                {{ \App\Models\Leave::where('status','pending')->count() }}
+            </h2>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow border-0 rounded-4 p-3 text-center">
+            <h6 class="text-muted">Pending Documents</h6>
+            <h2 class="fw-bold text-info">
+                {{ \App\Models\Document::where('status','pending')->count() }}
+            </h2>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow border-0 rounded-4 p-3 text-center">
+            <h6 class="text-muted">Total Payroll</h6>
+            <h2 class="fw-bold text-success">
+                ₹{{ \App\Models\Payroll::sum('total') }}
+            </h2>
         </div>
     </div>
 
 </div>
 
-@endsection
+<!-- 🔥 CHART SECTION -->
+<div class="card mt-4 p-4 shadow rounded-4">
+    <h5 class="mb-3">System Overview</h5>
+    <canvas id="dashboardChart"></canvas>
+</div>
 
+<!-- 🔥 RECENT ACTIVITY (OPTIONAL BONUS) -->
+<div class="card mt-4 p-4 shadow rounded-4">
+    <h5 class="mb-3">Recent Employees</h5>
 
-@section('scripts')
+    <ul class="list-group">
+        @foreach(\App\Models\Employee::latest()->take(5)->get() as $emp)
+            <li class="list-group-item d-flex justify-content-between">
+                {{ $emp->name }}
+                <span class="text-muted">
+    {{ $emp->created_at ? $emp->created_at->diffForHumans() : 'No date' }}
+</span>
+            </li>
+        @endforeach
+    </ul>
+</div>
 
-<!-- Chart JS -->
+<!-- 🔥 CHART SCRIPT -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-    // Bar Chart
-    new Chart(document.getElementById('attendanceChart'), {
-        type: 'bar',
-        data: {
-            labels: ['Present', 'Absent', 'Leave'],
-            datasets: [{
-                data: [95, 15, 10]
-            }]
-        }
-    });
+const ctx = document.getElementById('dashboardChart');
 
-    // Pie Chart
-    new Chart(document.getElementById('leaveChart'), {
-        type: 'doughnut',
-        data: {
-            labels: ['Sick', 'Casual', 'Annual'],
-            datasets: [{
-                data: [5, 3, 2]
-            }]
-        }
-    });
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Employees', 'Leaves', 'Documents', 'Tasks'],
+        datasets: [{
+            label: 'System Data',
+            data: [
+                {{ \App\Models\Employee::count() }},
+                {{ \App\Models\Leave::count() }},
+                {{ \App\Models\Document::count() }},
+                {{ \App\Models\Task::count() }}
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true
+    }
+});
 </script>
+
+<!-- 🔥 HOVER EFFECT -->
+<style>
+.card:hover {
+    transform: scale(1.03);
+    transition: 0.3s;
+}
+</style>
 
 @endsection

@@ -13,7 +13,6 @@
         <select class="form-control w-25">
             <option>All Status</option>
             <option>Pending</option>
-            <option>In Progress</option>
             <option>Completed</option>
         </select>
     </div>
@@ -35,34 +34,39 @@
 
             <tbody>
 
+                @forelse($tasks as $key => $task)
                 <tr>
-                    <td>1</td>
-                    <td>Complete Report</td>
-                    <td>Prepare monthly report</td>
-                    <td>15-04-2026</td>
-                    <td><span class="badge bg-warning text-dark">Pending</span></td>
+                    <td>{{ $key + 1 }}</td>
+                    <td>{{ $task->title }}</td>
+                    <td>{{ $task->description }}</td>
+                    <td>{{ $task->deadline }}</td>
+
+                    <td>
+                        @if($task->status == 'Pending')
+                            <span class="badge bg-warning text-dark">Pending</span>
+                        @else
+                            <span class="badge bg-success">Completed</span>
+                        @endif
+                    </td>
+
                     <td>
                         <button class="btn btn-primary btn-sm">
                             <i class="fa fa-eye"></i> View
                         </button>
-                        <button class="btn btn-success btn-sm">
+
+                        @if($task->status == 'Pending')
+                        <a href="/employee/task/done/{{ $task->id }}" class="btn btn-success btn-sm">
                             <i class="fa fa-check"></i> Mark Done
-                        </button>
+                        </a>
+                        @endif
                     </td>
                 </tr>
 
+                @empty
                 <tr>
-                    <td>2</td>
-                    <td>Client Meeting</td>
-                    <td>Attend project meeting</td>
-                    <td>12-04-2026</td>
-                    <td><span class="badge bg-success">Completed</span></td>
-                    <td>
-                        <button class="btn btn-secondary btn-sm">
-                            <i class="fa fa-eye"></i> View
-                        </button>
-                    </td>
+                    <td colspan="6" class="text-center">No tasks found</td>
                 </tr>
+                @endforelse
 
             </tbody>
 

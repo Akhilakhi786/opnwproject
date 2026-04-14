@@ -2,85 +2,40 @@
 
 @section('content')
 
-<h4 class="mb-4 gradient-text">Dashboard Overview</h4>
+<h3 class="mb-4 fw-bold">Employee Dashboard</h3>
 
-<!-- Stats -->
-<div class="row g-4 mb-4">
+<div class="row">
 
-    <div class="col-md-3">
-        <div class="glass-card text-center">
-            <h6>Total Tasks</h6>
-            <h2>8</h2>
+    <!-- Tasks -->
+    <div class="col-md-4">
+        <div class="card bg-primary text-white p-3 shadow">
+            <h5>My Tasks</h5>
+            <h3>
+                {{ \App\Models\Task::where('employee_id', auth()->user()->id)->count() }}
+            </h3>
         </div>
     </div>
 
-    <div class="col-md-3">
-        <div class="glass-card text-center">
-            <h6>Completed</h6>
-            <h2 class="text-success">5</h2>
+    <!-- Leaves -->
+    <div class="col-md-4">
+        <div class="card bg-warning text-dark p-3 shadow">
+            <h5>My Leaves</h5>
+            <h3>
+                {{ \App\Models\Leave::where('employee_id', auth()->user()->id)->count() }}
+            </h3>
         </div>
     </div>
 
-    <div class="col-md-3">
-        <div class="glass-card text-center">
-            <h6>Pending</h6>
-            <h2 class="text-warning">3</h2>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="glass-card text-center">
-            <h6>Attendance</h6>
-            <h2 class="text-info">92%</h2>
-        </div>
-    </div>
-
-</div>
-
-<!-- Charts -->
-<div class="row g-4">
-
-    <div class="col-md-6">
-        <div class="glass-card">
-            <h6>Attendance</h6>
-            <canvas id="barChart"></canvas>
-        </div>
-    </div>
-
-    <div class="col-md-6">
-        <div class="glass-card">
-            <h6>Task Status</h6>
-            <canvas id="pieChart"></canvas>
+    <!-- Documents -->
+    <div class="col-md-4">
+        <div class="card bg-success text-white p-3 shadow">
+            <h5>My Documents</h5>
+            <h3>
+                {{ \App\Models\Document::where('employee_id', auth()->user()->id)->count() }}
+            </h3>
         </div>
     </div>
 
 </div>
-
-<!-- Charts -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script>
-new Chart(document.getElementById('barChart'), {
-    type: 'bar',
-    data: {
-        labels: ['Present', 'Absent', 'Leave'],
-        datasets: [{
-            data: [20, 3, 2],
-            backgroundColor: ['#22c55e', '#ef4444', '#f59e0b']
-        }]
-    }
-});
-
-new Chart(document.getElementById('pieChart'), {
-    type: 'doughnut',
-    data: {
-        labels: ['Completed', 'Pending'],
-        datasets: [{
-            data: [5, 3],
-            backgroundColor: ['#22c55e', '#f59e0b']
-        }]
-    }
-});
-</script>
 
 @endsection

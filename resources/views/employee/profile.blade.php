@@ -2,6 +2,12 @@
 
 @section('content')
 
+@if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
 <h3 class="mb-4 fw-bold">My Profile</h3>
 
 <div class="row">
@@ -14,14 +20,20 @@
                  class="rounded-circle mb-3"
                  width="120" height="120">
 
-            <h5 class="fw-bold">John Doe</h5>
-            <p class="text-muted">Software Developer</p>
+            <h5 class="fw-bold">
+                {{ $employee->name ?? 'N/A' }}
+            </h5>
+
+            <p class="text-muted">
+                {{ $employee->department ?? 'Employee' }}
+            </p>
 
             <span class="badge bg-success mb-3">Active</span>
 
-            <button class="btn btn-primary w-100">
+            <!-- ✅ FIXED BUTTON -->
+            <a href="/employee/profile/edit" class="btn btn-primary w-100">
                 <i class="fa fa-edit"></i> Edit Profile
-            </button>
+            </a>
 
         </div>
     </div>
@@ -35,31 +47,35 @@
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label>Email</label>
-                    <input type="text" class="form-control" value="john@example.com" readonly>
+                    <input type="text" class="form-control"
+                        value="{{ $employee->email ?? '' }}" readonly>
                 </div>
 
                 <div class="col-md-6">
                     <label>Phone</label>
-                    <input type="text" class="form-control" value="9876543210" readonly>
+                    <input type="text" class="form-control"
+                        value="{{ $employee->phone ?? '' }}" readonly>
                 </div>
             </div>
 
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label>Department</label>
-                    <input type="text" class="form-control" value="IT" readonly>
+                    <input type="text" class="form-control"
+                        value="{{ $employee->department ?? '' }}" readonly>
                 </div>
 
                 <div class="col-md-6">
                     <label>Joining Date</label>
-                    <input type="text" class="form-control" value="01-01-2025" readonly>
+                    <input type="text" class="form-control"
+                        value="{{ $employee && $employee->joining_date ? \Carbon\Carbon::parse($employee->joining_date)->format('d-m-Y') : '' }}" readonly>
                 </div>
             </div>
 
             <div class="mb-3">
                 <label>Address</label>
                 <textarea class="form-control" rows="3" readonly>
-Hyderabad, India
+{{ $employee->address ?? '' }}
                 </textarea>
             </div>
 
